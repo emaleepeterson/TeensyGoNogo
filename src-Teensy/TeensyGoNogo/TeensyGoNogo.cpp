@@ -406,7 +406,6 @@ void TeensyGoNogo::update() {
                     if (digitalRead(_lickPin) == HIGH) {
                         if (_prevLickWasLow) {
                             // detected lick onset
-                            SSO_lick();
                             SSO_lick_outcome(_prevLickWasLow);
                             int binNum = _stimTimer / _binSize_us; // integer division
                             _lickBins[binNum]++;

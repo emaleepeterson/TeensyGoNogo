@@ -90,15 +90,6 @@ void SSO_paramVal(const char* paramName, float val1, float val2) {
 }
 
 
-void SSO_lick(){
-    if (verboseOutput) {
-        Serial.println("Lick");
-    } else {
-        Serial.println("L");
-    }
-}
-
-
 void SSO_lick_outcome(bool prevLickWasLow){
     if (verboseOutput) {
         if (prevLickWasLow) {

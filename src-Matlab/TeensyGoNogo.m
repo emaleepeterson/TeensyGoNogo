@@ -17,6 +17,7 @@ classdef TeensyGoNogo < handle
         figure_W
 
         logFile = []
+        logFolder = 'C://User/some/folder/name'
         loggingStartTime
         behviorData = []
         trialData = []
@@ -137,12 +138,12 @@ classdef TeensyGoNogo < handle
         end
 
         function setupLogging(self, logName)
-            baseName = [logName, '_', char(datetime,'yyyy-MM-dd'), '_'];
+            baseName = [self.logFolder, filesep,logName, '_', char(datetime,'yyyy-MM-dd'), '_'];
             fileCounter = 1;
-            fName = [baseName, int2str(fileCounter), '.csv'];
+            fName = [baseName, num2str(fileCounter, '%03d'), '.csv'];
             while (exist(fName, 'file'))
                 fileCounter = fileCounter + 1;
-                fName = [baseName, int2str(fileCounter), '.csv'];
+                fName = [baseName, num2str(fileCounter, '%03d'), '.csv'];
             end
             [FileName,PathName] = uiputfile(fName,'Save log file' );
             fName = fullfile(PathName,FileName);
