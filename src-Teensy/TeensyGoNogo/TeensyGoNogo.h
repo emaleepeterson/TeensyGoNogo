@@ -94,7 +94,6 @@ private:
 
     // links to hardware
     uint8_t _beambreakPin;
-    uint8_t _optoPin;
     uint8_t _lickPin;
     uint8_t _LEDPin;
     uint8_t _rewardPin;
@@ -129,7 +128,6 @@ public:
     void set_lickPin(uint8_t lickPin);
     void set_LEDPin(uint8_t LEDPin);
     void set_rewardPin(uint8_t rewardPin);
-    void set_optoPin(uint8_t optoPin);
     void set_blankOdorPin(uint8_t blankOdorPin);
     void set_unrewardedOdorPin(uint8_t unrewardedOdorPin);
     void set_pStim(float pStim);
@@ -151,7 +149,6 @@ public:
     uint8_t get_lickPin() {return _lickPin;};
     uint8_t get_LEDPin() {return _LEDPin;};
     uint8_t get_rewardPin() {return _rewardPin;};
-    uint8_t get_optoPin() {return _optoPin;};
     uint8_t get_blankOdorPin() {return _blankOdorPin;};
     uint8_t get_unrewardedOdorPin() {return _unrewardedOdorPin;};
     float get_pStim() {return _pStim;};

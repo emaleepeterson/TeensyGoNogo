@@ -395,7 +395,6 @@ void TeensyGoNogo::update() {
                 // end stimulus
                 OpenValvePin(_blankOdorPin);
                 CloseValvePin(_currentOdorPin);
-                OpenValvePin(_optoPin);
                 SSO_nose(isNoseIn());
                 SSO_stimulusEnd();
                 SSO_trialOutcome(SSO_OUTCOME_MISS);
@@ -476,12 +475,16 @@ void TeensyGoNogo::update() {
                 if (_stimTimer < _stimulusDuration_us) {
                     if (digitalRead(_lickPin) == HIGH) {
                         if (_prevLickWasLow) {
+                            SSO_lick_outcome(_prevLickWasLow);
                             Serial.println(". Lick");
                             int binNum = _stimTimer / _binSize_us; //integer division
                             _lickBins[binNum]++;
                         }
                         _prevLickWasLow = false;
                     } else {
+                        if (!_prevLickWasLow) {
+                            SSO_lick_outcome(_prevLickWasLow);
+                        }
                         _prevLickWasLow = true;
                     }
                 } else {
