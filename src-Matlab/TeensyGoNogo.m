@@ -158,7 +158,7 @@ classdef TeensyGoNogo < handle
                 if isnumeric(value)
                     value = num2str(value);
                 end
-                fprintf(self.logFile, '%.4f, %s, %s\n', secondsElapsed , valName, value);
+                fprintf(self.logFile, '%.4f,%s,%s\n', secondsElapsed , valName, value);
             end
         end
 
