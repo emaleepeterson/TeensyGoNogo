@@ -93,12 +93,6 @@ void TeensyGoNogo::set_unrewardedOdorPin(uint8_t unrewardedOdorPin) {
     }
 }
 
-void TeensyGoNogo::set_optoPin(uint8_t optoPin) {
-    if (!_isRunning) {
-        _optoPin = optoPin;
-    }
-}
-
 void TeensyGoNogo::set_pStim(float pStim) {
     if (pStim < 0 || pStim > 1) {
         // ERROR
