@@ -58,6 +58,12 @@ int TeensyGoNogo::get_rewardedOdorPin(uint8_t rewardedOdorNum) {
     return _rewardedOdorPins[rewardedOdorNum-1];
 }
 
+void TeensyGoNogo::set_optoPin(uint8_t optoPin) {
+    if (!_isRunning) {
+        _optoPin = optoPin;
+    }
+}
+
 void TeensyGoNogo::set_beambreakPin(uint8_t beambreakPin) {
     if (!_isRunning) {
         _beambreakPin = beambreakPin;
