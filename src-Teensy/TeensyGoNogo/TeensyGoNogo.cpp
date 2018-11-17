@@ -9,6 +9,7 @@ TeensyGoNogo::TeensyGoNogo() {
     _numTrials = 10;
     _numLickBins = 4;
     _minLickBins = 3;
+    _numRewardedOdors = 1;
     _stimulusDuration_us = 2000 * 1000;
     _rewardDuration_us = 100 * 1000;
     _interTrialDuration_us = 2000 * 1000;
@@ -290,6 +291,7 @@ void TeensyGoNogo::stop() {
     _noseChange = false;
     digitalWrite(_LEDPin, LOW);
     CloseValvePin(_rewardPin);
+    CloseValvePin(_optoPin); // turn off laser pin at end of experiment
     SSO_reward(false);
     CloseValvePin(_blankOdorPin);
     CloseValvePin(_unrewardedOdorPin);
@@ -357,13 +359,11 @@ void TeensyGoNogo::update() {
             }
             break;
 
-       // case OPTO_STIM:
-         //   OpenValvePin(_optoPin);
-
         case STIM_DELIVERY:
             // start stimulus
             CloseValvePin(_blankOdorPin);
             OpenValvePin(_currentOdorPin);
+            OpenValvePin(_optoPin); //turn on opto pin to turn on laser 
             SSO_stimulus(_trialTypeList[_trialNum]);
             debugMsg = String("Stimulus delivery (") + _trialTypeList[_trialNum] + ")";
             debugOut(debugMsg.c_str(), 1);
@@ -389,6 +389,7 @@ void TeensyGoNogo::update() {
                 // end stimulus
                 OpenValvePin(_blankOdorPin);
                 CloseValvePin(_currentOdorPin);
+                CloseValvePin (_optoPin);// turn off laser pin because of miss
                 SSO_nose(isNoseIn());
                 SSO_stimulusEnd();
                 SSO_trialOutcome(SSO_OUTCOME_MISS);
@@ -422,6 +423,7 @@ void TeensyGoNogo::update() {
                     // end stimulus
                     OpenValvePin(_blankOdorPin);
                     CloseValvePin(_currentOdorPin);
+                    CloseValvePin(_optoPin); // turn off laser pin because reward trial ended
                     SSO_stimulusEnd();
                     int numBinsWithLicks = 0;
                     debugMsg = "Lick Bins: [ ";
@@ -460,6 +462,7 @@ void TeensyGoNogo::update() {
                 // end stimulus
                 OpenValvePin(_blankOdorPin);
                 CloseValvePin(_currentOdorPin);
+                CloseValvePin (_optoPin); // turn off laser pin because of CR
                 SSO_nose(isNoseIn());
                 SSO_stimulusEnd();
                 SSO_trialOutcome(SSO_OUTCOME_CORRECT_REJECTION); // correct rejection
@@ -483,6 +486,7 @@ void TeensyGoNogo::update() {
                 } else {
                     OpenValvePin(_blankOdorPin);
                     CloseValvePin(_currentOdorPin);
+                    CloseValvePin(_optoPin);// turn off laser pin because of FA
                     SSO_stimulusEnd();
                     int numBinsWithLicks = 0;
                     Serial.print("Lick Bins: [ ");

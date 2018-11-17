@@ -34,8 +34,12 @@ void setup() {
     gng.set_interRewardDuration_ms(500);
     gng.set_interTrialDuration_ms(1000);
     gng.set_numRewardedOdors(1);
+    gng.set_nullPenalty_ms(5000);
+    gng.set_pauseLickingDelay_ms(1000);
+    gng.set_lickPenaltyThresh(1);
 
     // set up default pins for HMS Valve Driver Board
+   // gng.set_optoPin(IO_3);
     gng.set_beambreakPin(IO_1);
     gng.set_lickPin(LICK_1);
     gng.set_LEDPin(IO_2);
@@ -108,6 +112,11 @@ void interpretGNGCommand(char* command, int numArgs, long* args) {
         if (numArgs < 2) {Error_TooFewArgs(); return;}
         gng.set_rewardedOdorPin(args[0], args[1]);
         SSO_paramVal("rewardedOdorPin", args[0], gng.get_rewardedOdorPin(args[0]));
+
+   // } else if (strcmp(command,"optoPin") == 0) {
+     //   if (numArgs < 1) {Error_TooFewArgs(); return;}
+       // gng.set_optoPin(args[0]);
+        //SSO_paramVal("optoPin ", gng.get_optoPin());
 
     } else if (strcmp(command,"beambreakPin") == 0) {
         if (numArgs < 1) {Error_TooFewArgs(); return;}
@@ -183,6 +192,21 @@ void interpretGNGCommand(char* command, int numArgs, long* args) {
         if (numArgs < 1) {Error_TooFewArgs(); return;}
         gng.set_interRewardDuration_ms(args[0]);
         SSO_paramVal("interRewardDuration_ms ", gng.get_interRewardDuration_ms());
+
+    } else if (strcmp(command,"nullPenalty_ms") == 0) {
+        if (numArgs < 1) {Error_TooFewArgs(); return;}
+        gng.set_nullPenalty_ms(args[0]);
+        SSO_paramVal("nullPenalty_ms ", gng.get_nullPenalty_ms());
+
+    } else if (strcmp(command,"pauseLickingDelay_ms") == 0) {
+        if (numArgs < 1) {Error_TooFewArgs(); return;}
+        gng.set_pauseLickingDelay_ms(args[0]);
+        SSO_paramVal("pauseLickingDelay_ms ", gng.get_pauseLickingDelay_ms());
+
+    } else if (strcmp(command,"lickPenaltyThresh") == 0) {
+        if (numArgs < 1) {Error_TooFewArgs(); return;}
+        gng.set_lickPenaltyThresh(args[0]);
+        SSO_paramVal("lickPenaltyThresh ", gng.get_lickPenaltyThresh());
     }
 }
 
