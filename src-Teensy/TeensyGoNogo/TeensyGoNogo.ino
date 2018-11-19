@@ -167,6 +167,7 @@ void interpretGNGCommand(char* command, int numArgs, long* args) {
         if (numArgs < 1) {Error_TooFewArgs(); return;}
         gng.set_numTrials(args[0]);
         SSO_paramVal("numTrials ", gng.get_numTrials());
+        // Serial.println("Num trials changed.");
 
     } else if (strcmp(command,"maxRunLength") == 0) {
         if (numArgs < 1) {Error_TooFewArgs(); return;}
