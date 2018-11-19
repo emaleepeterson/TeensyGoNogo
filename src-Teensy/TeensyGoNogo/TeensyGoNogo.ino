@@ -21,6 +21,8 @@ void setup() {
         ; // wait for serial port to connect. Needed for native USB
     }
 
+    Serial.println("Starting setup.");
+
     // set up valves
     setupValves();
 
@@ -37,6 +39,8 @@ void setup() {
     gng.set_nullPenalty_ms(5000);
     gng.set_pauseLickingDelay_ms(1000);
     gng.set_lickPenaltyThresh(1);
+
+    Serial.println("Setting defaults.");
 
     // set up default pins for HMS Valve Driver Board
     gng.set_optoPin(IO_3);
@@ -68,17 +72,17 @@ void setup() {
 
 
 void interpretGNGCommand(char* command, int numArgs, long* args) {
-    // Serial.print("Command: ");
-    // Serial.print(command);
-    // // Serial.print(" (");
-    // // Serial.print(numArgs);
-    // // Serial.println(" args)");
-    // Serial.print(" [ ");
-    // for (int i=0; i<numArgs; i++) {
-    //     Serial.print(args[i]);
-    //     Serial.print(" ");
-    // }
-    // Serial.println(" ] ");
+//    Serial.print("Command: ");
+//    Serial.print(command);
+//    Serial.print(" (");
+//    Serial.print(numArgs);
+//    Serial.println(" args)");
+//    Serial.print(" [ ");
+//    for (int i=0; i<numArgs; i++) {
+//        Serial.print(args[i]);
+//        Serial.print(" ");
+//    }
+//    Serial.println(" ] ");
 
     String msg;
 
@@ -105,7 +109,13 @@ void interpretGNGCommand(char* command, int numArgs, long* args) {
 
     } else if (strcmp(command,"numRewardedOdors") == 0) {
         if (numArgs < 1) {Error_TooFewArgs(); return;}
+//        Serial.println("Resetting odor pins.");
         gng.set_numRewardedOdors(args[0]);
+        gng.set_rewardedOdorPin(1, VALVE_4);
+        gng.set_rewardedOdorPin(2, VALVE_5);
+        gng.set_rewardedOdorPin(3, VALVE_6);
+        gng.set_rewardedOdorPin(4, VALVE_7);
+        gng.set_rewardedOdorPin(5, VALVE_8);
         SSO_paramVal("numRewardedOdors", gng.get_numRewardedOdors());
 
     } else if (strcmp(command,"rewardedOdorPin") == 0) {
@@ -243,4 +253,3 @@ void loop() {
 		maxLoopTime = 0;
 	}
 }
-

@@ -9,7 +9,7 @@ TeensyGoNogo::TeensyGoNogo() {
     _numTrials = 10;
     _numLickBins = 4;
     _minLickBins = 3;
-    _numRewardedOdors = 1;
+    _numRewardedOdors = 5;
     _stimulusDuration_us = 2000 * 1000;
     _rewardDuration_us = 100 * 1000;
     _interTrialDuration_us = 2000 * 1000;
@@ -47,6 +47,7 @@ void TeensyGoNogo::set_rewardedOdorPin(uint8_t rewardedOdorNum, uint8_t pin) {
     }
     if (!_isRunning) {
         _rewardedOdorPins[rewardedOdorNum-1] = pin;
+//        Serial.print("A rewarded odor pin has been set to "); Serial.println(_rewardedOdorPins[rewardedOdorNum-1]);
     }
 }
 
@@ -215,7 +216,7 @@ void TeensyGoNogo::run() {
     if (_maxRunLength == 0) {
         for (unsigned int trial=0; trial < _numTrials; trial++) {
             if (random(999) < _pStim * 1000) {
-                _trialTypeList[trial] = random(1,_numRewardedOdors); // defaults to all 1s if _numRewardedOdors==1
+                _trialTypeList[trial] = random(1,_numRewardedOdors+1); // defaults to all 1s if _numRewardedOdors==1
             } else {
                 _trialTypeList[trial] = 0;
             }
@@ -225,7 +226,7 @@ void TeensyGoNogo::run() {
         unsigned int currRunLength = 1;
         bool prevTrialWasType0;
         if (random(999) < _pStim * 1000) {
-            _trialTypeList[0] = random(1,_numRewardedOdors); // defaults to all 1s if _numRewardedOdors==1
+            _trialTypeList[0] = random(1,_numRewardedOdors+1); // defaults to all 1s if _numRewardedOdors==1
             prevTrialWasType0 = false;
         } else {
             _trialTypeList[0] = 0;
@@ -237,14 +238,14 @@ void TeensyGoNogo::run() {
                 // force the current trial to be the opposite type
                 // from prev trial
                 if (prevTrialWasType0) {
-                    _trialTypeList[trial] = random(1,_numRewardedOdors); // defaults to 1 if _numRewardedOdors==1
+                    _trialTypeList[trial] = random(1,_numRewardedOdors+1); // defaults to 1 if _numRewardedOdors==1
                 } else {
                     _trialTypeList[trial] = 0;
                 }
                 currRunLength = 1;
                 prevTrialWasType0 = !prevTrialWasType0;
             } else if (random(999) < _pStim * 1000) {
-                _trialTypeList[trial] = random(1,_numRewardedOdors); // defaults to 1 if _numRewardedOdors==1
+                _trialTypeList[trial] = random(1,_numRewardedOdors+1); // defaults to 1 if _numRewardedOdors==1
                 if (!prevTrialWasType0) {
                     currRunLength++;
                 } else {
@@ -367,6 +368,7 @@ void TeensyGoNogo::update() {
 
         case STIM_DELIVERY:
             // start stimulus
+            // Serial.print("Telling pin"); Serial.print(_currentOdorPin); Serial.println(" to open.");
             CloseValvePin(_blankOdorPin);
             OpenValvePin(_currentOdorPin);
             OpenValvePin(_optoPin); //turn on opto pin to turn on laser 

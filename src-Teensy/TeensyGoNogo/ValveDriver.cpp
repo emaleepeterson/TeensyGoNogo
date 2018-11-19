@@ -56,6 +56,8 @@ void OpenValveNum(int valveNum) { // valveNum is 1-based
 		return;
 	}
 
+	Serial.print("Valve "); Serial.print(valveNum); Serial.println(" opened.");
+
 	// open the valve
 	digitalWrite(VALVES[valveNum-1], HIGH);
 	valve_status_list[valveNum-1] = VALVE_OPEN_2;
