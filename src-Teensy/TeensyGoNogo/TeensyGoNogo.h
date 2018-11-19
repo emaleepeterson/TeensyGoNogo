@@ -67,6 +67,7 @@ private:
     unsigned long _binSize_us; // auto-computed from above vars
     unsigned long _rewardDuration_us;
     unsigned long _interTrialDuration_us;
+    double _interTrialDuration_s;
     unsigned long _interRewardDuration_us; // for multi-reward delivery
     unsigned long _nullPenalty_us;
     unsigned long _pauseLickingDelay_us;
@@ -92,6 +93,11 @@ private:
     elapsedMicros _itiTimer;
     elapsedMicros _pause_licking_timer;
     unsigned long _lickTime;
+
+    //for ITI
+    double randNum;
+    double u;
+    double _thisITI;
 
     // links to hardware
     

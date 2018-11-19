@@ -20,8 +20,13 @@ classdef TeensyGoNogo < handle
         logFolder = 'C:\Data\teensy';
         loggingStartTime
         behviorData = []
-        trialData = []
-
+        odorTypeList = []
+        accuracy = []
+        trialIndex;
+        stimDurations = [50, 100, 200, 500, 1000, 2000]; 
+        lookBackCounter
+        currentDelay
+        n_trials_since_switch
         isRunning = false
     end
 
@@ -102,6 +107,36 @@ classdef TeensyGoNogo < handle
     end % Arduino commands
 
     methods
+%         function acc = calculateAccuracy(self)
+%             if (length(self.accuracy) < self.user.numLookBack)
+%                 acc = mean(self.accuracy);
+%             else
+%                 lastN = self.accuracy(end-self.user.numLookBack+1:end);
+%                 acc = mean(lastN);
+%             end
+%         end
+        
+         function accuracy = getAccuracy(self, look_back)
+            start_idx = self.trialIndex - look_back + 1;
+%             self.debugOut(self.accuracy(self.odorTypeList(start_idx:self.trialNum)==1),1);
+            accuracy = sum(self.accuracy(self.odorTypeList(start_idx:self.trialIndex)==1)) / ...
+                sum(self.odorTypeList(start_idx:self.trialIndex)==1);
+         end
+         
+         function updateDelay(self)
+            curr_idx = find(self.stimDurations > self.currentDelay, 1, 'first');
+            if isempty(curr_idx)
+                self.debugOut('Current delay not in list. Using first delay',1);
+                curr_idx = 1;
+            end
+            if curr_idx < length(self.stimDurations)
+                self.currentDelay = self.stimDurations(curr_idx);
+                self.setParam('stimulusDuration_ms', self.currentDelay);
+                fprintf(['New stimulus duration: ' num2str(self.currentDelay) ' ms\n']);
+            end
+        end
+        
+                
         function debugOut(self, message, debugLevel)
             if nargin < 3
                 debugLevel = 1;
@@ -121,6 +156,10 @@ classdef TeensyGoNogo < handle
                 pName = pName{1}; % convert from cell to char
                 self.logValue(pName, self.user.(pName));
             end
+            self.odorTypeList = zeros(1, self.user.numTrials);
+            self.accuracy = zeros(1, self.user.numTrials);
+            self.n_trials_since_switch = 0;
+            self.currentDelay = self.user.stimulusDuration_ms;
 
             self.Arduino.writeMessage('run',0,0);
         end
@@ -172,7 +211,7 @@ classdef TeensyGoNogo < handle
             params = [];
 
             p.name = 'numTrials';
-            p.val = 5;
+            p.val = 100;
             p.units = '';
             p.min = 1;
             p.max = inf;
@@ -181,7 +220,7 @@ classdef TeensyGoNogo < handle
             params = [params, p];
 
             p.name = 'pStim';
-            p.val = 0.5;
+            p.val = 1;
             p.units = '';
             p.min = 0;
             p.max = 1;
@@ -199,7 +238,7 @@ classdef TeensyGoNogo < handle
             params = [params, p];
 
             p.name = 'numRewardedOdors';
-            p.val = 1;
+            p.val = 4;
             p.units = '';
             p.min = 1;
             p.max = 5;
@@ -208,7 +247,7 @@ classdef TeensyGoNogo < handle
             params = [params, p];
 
             p.name = 'stimulusDuration_ms';
-            p.val = 2000;
+            p.val = self.stimDurations(1);
             p.units = 'ms';
             p.min = 0;
             p.max = inf;
@@ -226,7 +265,7 @@ classdef TeensyGoNogo < handle
             params = [params, p];
 
             p.name = 'minLickBins';
-            p.val = 3;
+            p.val = 0;
             p.units = 'bins';
             p.min = 0;
             p.max = inf;
@@ -245,7 +284,7 @@ classdef TeensyGoNogo < handle
             params = [params, p];
 
             p.name = 'interTrialDuration_ms';
-            p.val = 5000;
+            p.val = 1000;
             p.units = 'ms';
             p.min = 0;
             p.max = inf;
@@ -279,6 +318,25 @@ classdef TeensyGoNogo < handle
             p.step = 1;
             p.desc = 'Max number of licks during ITI before ITI is reset';
             params = [params, p];
+            
+            p.name = 'numLookBack';
+            p.val = 2;
+            p.units = '';
+            p.min = 1;
+            p.max = inf;
+            p.step = 1;
+            p.desc = 'Number of trials over which to calculate moving average';
+            params = [params, p];
+            
+            p.name = 'accThresh';
+            p.val = 0.7;
+            p.units = '';
+            p.min = 0;
+            p.max = 1;
+            p.step = 0.1;
+            p.desc = 'Threshold for increasing stimulus duration';
+            params = [params, p];
+            
 
             % KEEP DEFAULT PIN VALUES FOR NOW...
 
@@ -765,8 +823,24 @@ classdef TeensyGoNogo < handle
 
                     case 'T'
                         self.logValue('Trial', value)
+                        self.trialIndex = value;
+                        if self.n_trials_since_switch >= self.user.numLookBack && ...
+                                self.getAccuracy(self.user.numLookBack) >= self.user.accThresh
+                                %self.debugOut(sprintf('At delay %0.3f, accuracy of %0.3f over the past %d trials was above threshold of %0.3f', ...
+                                %    self.current_pav_delay, self.getAccuracy(self.user.numLookBack), self.n_trials_since_switch, self.user.accuracyThresh),1);
+                                %self.updatePavDelay();
+                                self.updateDelay();
+%                                     self.stimDurationCounter = self.stimDurationCounter + 1;
+%                                     newStimDuration = self.stimDurations(self.stimDurationCounter);                                  
+                                self.n_trials_since_switch = 0;
+                        else
+                            self.n_trials_since_switch = self.n_trials_since_switch + 1;
+                        end
                     case 'SS'
                         self.logValue('Stimulus_On', value)
+                        if value > 0
+                            self.odorTypeList(self.trialIndex) = 1;
+                        end
                     case 'SE'
                         self.logEvent('Stimulus_Off')
                     case 'RS' % Reward Start
@@ -786,12 +860,14 @@ classdef TeensyGoNogo < handle
 
                     case 'OH'
                         self.logEvent('TRIAL_END_HIT')
+                        self.accuracy(self.trialIndex) = 1;
                     case 'OM'
                         self.logEvent('TRIAL_END_MISS')
                     case 'OCR'
                         self.logEvent('TRIAL_END_CORRECT_REJECTION')
                     case 'OFA'
                         self.logEvent('TRIAL_END_FALSE_ALARM')
+
 
                     case '$'
                         % Teensy started up; do nothing

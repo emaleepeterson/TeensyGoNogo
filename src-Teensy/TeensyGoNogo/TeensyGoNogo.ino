@@ -100,7 +100,7 @@ void interpretGNGCommand(char* command, int numArgs, long* args) {
 
     } else if ((strcmp(command,"reward") == 0)) {
         gng.manualReward();
-        SSO_comment("Delivereing single reward");
+        SSO_comment("Delivering single reward");
 
     } else if ((strcmp(command,"multiReward") == 0)) {
         if (numArgs < 1) {Error_TooFewArgs(); return;}

@@ -136,9 +136,7 @@ void TeensyGoNogo::set_numLickBins(uint8_t numLickBins) {
 }
 
 void TeensyGoNogo::set_stimulusDuration_ms(unsigned long stimulusDuration_ms) {
-    if (!_isRunning) {
-        _stimulusDuration_us = stimulusDuration_ms * 1000;
-    }
+    _stimulusDuration_us = stimulusDuration_ms * 1000;
 }
 
 void TeensyGoNogo::set_rewardDuration_ms(unsigned long rewardDuration_ms) {
@@ -150,6 +148,7 @@ void TeensyGoNogo::set_rewardDuration_ms(unsigned long rewardDuration_ms) {
 void TeensyGoNogo::set_interTrialDuration_ms(unsigned long interTrialDuration_ms) {
     if (!_isRunning) {
         _interTrialDuration_us = interTrialDuration_ms * 1000;
+        _interTrialDuration_s = (double)interTrialDuration_ms / 1000.0;
     }
 }
 
@@ -321,6 +320,16 @@ void TeensyGoNogo::update() {
             break;
 
         case START_TRIAL:
+            //get random number ONCE PER TRIAL for adjusting the ITI
+            randNum = random(999999);
+            //u is uniformly distributed between 0 and 1
+            u = randNum/(double)999999;
+            _thisITI = (double)(-_interTrialDuration_s)*log(1-u) + _interTrialDuration_s;
+            while (_thisITI > 3*_interTrialDuration_s) {
+              _thisITI = (double)(-_interTrialDuration_s)*log(1-u) + _interTrialDuration_s;
+            }
+            _thisITI = _thisITI*1000*1000;
+
             // load trial type from list, then wait for nose poke to start tone & stim
             if (_trialNum > _numTrials) {
                 // Shouldn't get here
@@ -539,7 +548,7 @@ void TeensyGoNogo::update() {
                     _itiTimer = 0;
                     debugOut("Inter-Trial-Interval with penalty...",1);
                 }
-            } else if (_itiTimer >= (_interTrialDuration_us + _nullPenalty_us)) {
+            } else if (_itiTimer >= (_thisITI + _nullPenalty_us)) {
                 nextState = PAUSE_LICKING_WINDOW;
             }
             break;
@@ -553,8 +562,14 @@ void TeensyGoNogo::update() {
                     _itiTimer = 0;
                     debugOut("Inter-Trial-Interval...",1);
                 }
-            } else if (_itiTimer >= _interTrialDuration_us) {
+            } //make the ITI variable
+            else {
+              if (_itiTimer >= _thisITI) {
+//                Serial.print("randNum: "); Serial.println(randNum);
+//                Serial.print("u: "); Serial.println(u);
+                Serial.print("ITI in ms: "); Serial.println(_thisITI/(double)1000);
                 nextState = PAUSE_LICKING_WINDOW;
+              }    
             }
             break;
 
