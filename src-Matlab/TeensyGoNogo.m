@@ -28,6 +28,7 @@ classdef TeensyGoNogo < handle
         currentDelay
         n_trials_since_switch
         isRunning = false
+        mouseName = 'Adam';
     end
 
     properties
@@ -150,7 +151,7 @@ classdef TeensyGoNogo < handle
             self.disableParameterEditing();
             self.isRunning = true;
 
-            self.setupLogging('TestBehavior'); % TODO: get this from a user-entered field
+            self.setupLogging(self.mouseName); % TODO: get this from a user-entered field
             pNames = fieldnames(self.user);
             for pName = pNames'
                 pName = pName{1}; % convert from cell to char
@@ -320,7 +321,7 @@ classdef TeensyGoNogo < handle
             params = [params, p];
             
             p.name = 'numLookBack';
-            p.val = 2;
+            p.val = 20;
             p.units = '';
             p.min = 1;
             p.max = inf;
