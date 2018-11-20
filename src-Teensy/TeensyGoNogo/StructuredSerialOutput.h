@@ -22,6 +22,7 @@ void SSO_paramVal(const char* paramName, float val1, float val2);
 
 void SSO_lick_outcome(bool prevLickWasLow);
 void SSO_nose(bool isNoseIn);
+void SSO_opto(bool isOptoOn);
 void SSO_trialOutcome(int outcome);
 void SSO_reward(bool isStart);
 

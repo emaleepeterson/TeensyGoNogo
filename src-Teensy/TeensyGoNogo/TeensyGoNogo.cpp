@@ -210,9 +210,9 @@ void TeensyGoNogo::run() {
     // attachInterrupt(digitalPinToInterrupt(_lickPin), lickInterrupt, RISING);
     pinMode(_LEDPin, OUTPUT);
     digitalWrite(_LEDPin, LOW);
-    _led = 13;
-    pinMode(_led, OUTPUT);
-    digitalWrite(_led, LOW);
+    //_led = 13;
+    pinMode(_optoPin, OUTPUT);
+    digitalWrite(_optoPin, LOW);
     setupValves();
     OpenValvePin(_blankOdorPin);
     // initialize trial information
@@ -301,8 +301,9 @@ void TeensyGoNogo::stop() {
     _noseChange = false;
     digitalWrite(_LEDPin, LOW);
     CloseValvePin(_rewardPin);
-    CloseValvePin(_optoPin); // turn off laser pin at end of experiment
-    digitalWrite(_led, LOW);
+    //CloseValvePin(_optoPin); // turn off laser pin at end of experiment
+    digitalWrite(_optoPin, LOW);
+    SSO_opto(isOptoOn());
     SSO_reward(false);
     CloseValvePin(_blankOdorPin);
     CloseValvePin(_unrewardedOdorPin);
@@ -375,8 +376,9 @@ void TeensyGoNogo::update() {
             // Serial.print("Telling pin"); Serial.print(_currentOdorPin); Serial.println(" to open.");
             CloseValvePin(_blankOdorPin);
             OpenValvePin(_currentOdorPin);
-            digitalWrite(_led, HIGH);
-            OpenValvePin(_optoPin); //turn on opto pin to turn on laser 
+            digitalWrite(_optoPin, HIGH);
+            SSO_opto(isOptoOn());
+            //OpenValvePin(_optoPin); //turn on opto pin to turn on laser 
             SSO_stimulus(_trialTypeList[_trialNum]);
             debugMsg = String("Stimulus delivery (") + _trialTypeList[_trialNum] + ")";
             debugOut(debugMsg.c_str(), 1);
@@ -402,8 +404,9 @@ void TeensyGoNogo::update() {
                 // end stimulus
                 OpenValvePin(_blankOdorPin);
                 CloseValvePin(_currentOdorPin);
-                digitalWrite(_led, LOW);
-                CloseValvePin(_optoPin);// turn off laser pin because of miss
+                digitalWrite(_optoPin, LOW);
+                SSO_opto(isOptoOn());
+                //CloseValvePin(_optoPin);// turn off laser pin because of miss
                 SSO_nose(isNoseIn());
                 SSO_stimulusEnd();
                 SSO_trialOutcome(SSO_OUTCOME_MISS);
@@ -437,8 +440,9 @@ void TeensyGoNogo::update() {
                     // end stimulus
                     OpenValvePin(_blankOdorPin);
                     CloseValvePin(_currentOdorPin);
-                    digitalWrite(_led, LOW);
-                    CloseValvePin(_optoPin); // turn off laser pin because reward trial ended
+                    digitalWrite(_optoPin, LOW);
+                    SSO_opto(isOptoOn());
+                    //CloseValvePin(_optoPin); // turn off laser pin because reward trial ended
                     SSO_stimulusEnd();
                     int numBinsWithLicks = 0;
                     debugMsg = "Lick Bins: [ ";
@@ -477,8 +481,9 @@ void TeensyGoNogo::update() {
                 // end stimulus
                 OpenValvePin(_blankOdorPin);
                 CloseValvePin(_currentOdorPin);
-                digitalWrite(_led, LOW);
-                CloseValvePin (_optoPin); // turn off laser pin because of CR
+                digitalWrite(_optoPin, LOW);
+                SSO_opto(isOptoOn());
+                //CloseValvePin (_optoPin); // turn off laser pin because of CR
                 SSO_nose(isNoseIn());
                 SSO_stimulusEnd();
                 SSO_trialOutcome(SSO_OUTCOME_CORRECT_REJECTION); // correct rejection
@@ -502,8 +507,9 @@ void TeensyGoNogo::update() {
                 } else {
                     OpenValvePin(_blankOdorPin);
                     CloseValvePin(_currentOdorPin);
-                    CloseValvePin(_optoPin);// turn off laser pin because of FA
-                    digitalWrite(_led, LOW);
+                    //CloseValvePin(_optoPin);// turn off laser pin because of FA
+                    digitalWrite(_optoPin, LOW);
+                    SSO_opto(isOptoOn());
                     SSO_stimulusEnd();
                     int numBinsWithLicks = 0;
                     Serial.print("Lick Bins: [ ");

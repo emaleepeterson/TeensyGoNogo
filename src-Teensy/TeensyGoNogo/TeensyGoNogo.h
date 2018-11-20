@@ -95,7 +95,7 @@ private:
 
     // links to hardware
     
-    int _led;
+    //int _led;
     uint8_t _optoPin;
     uint8_t _beambreakPin;
     uint8_t _lickPin;
@@ -124,6 +124,9 @@ public:
 
     bool isNoseIn() {return digitalRead(_beambreakPin)==HIGH;};
     bool isNoseOut() {return digitalRead(_beambreakPin)==LOW;};
+
+    bool isOptoOn() {return digitalRead(_optoPin)==HIGH;};
+    bool isOptoOff() {return digitalRead(_optoPin)==LOW;};
 
     // set and get user-modifiable parameters
     void set_numRewardedOdors(uint8_t numRewardedOdors);

@@ -783,7 +783,10 @@ classdef TeensyGoNogo < handle
                         self.logEvent('Nose_In')
                     case 'NO'
                         self.logEvent('Nose_Out')
-
+                    case 'OI'
+                        self.logEvent('Opto_On')
+                    case 'OO'
+                        self.logEvent('Opto_Off')
                     case 'OH'
                         self.logEvent('TRIAL_END_HIT')
                     case 'OM'

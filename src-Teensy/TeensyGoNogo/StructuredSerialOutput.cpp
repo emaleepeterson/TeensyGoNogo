@@ -106,6 +106,21 @@ void SSO_lick_outcome(bool prevLickWasLow){
     }
 }
 
+void SSO_opto(bool isOptoOn){
+    if (verboseOutput) {
+        if (isOptoOn) {
+            Serial.println("Opto On");
+        } else {
+            Serial.println("Opto Off");
+        }
+    } else {
+        if (isOptoOn) {
+            Serial.println("OI");
+        } else {
+            Serial.println("OO");
+        }
+    }
+}
 
 void SSO_nose(bool isNoseIn){
     if (verboseOutput) {
