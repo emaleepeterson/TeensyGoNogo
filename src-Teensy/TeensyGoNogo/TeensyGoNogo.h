@@ -95,6 +95,7 @@ private:
 
     // links to hardware
     
+    int _led;
     uint8_t _optoPin;
     uint8_t _beambreakPin;
     uint8_t _lickPin;

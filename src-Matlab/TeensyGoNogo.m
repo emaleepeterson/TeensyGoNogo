@@ -17,7 +17,7 @@ classdef TeensyGoNogo < handle
         figure_W
 
         logFile = []
-        logFolder = 'C://User/some/folder/name'
+        logFolder = 'C:\Data\teensy';
         loggingStartTime
         behviorData = []
         trialData = []
