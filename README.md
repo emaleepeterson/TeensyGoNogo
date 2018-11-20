@@ -11,7 +11,7 @@ Teensy controller for a Go/Nogo behavior box
 ### Teensy firmware
 Use the Arduino IDE to compile and upload `src-Teensy/TeensyGoNogo` on the Teensy.
 
-### Matlat Extensions
+### Matlab Extensions
 Add `src-Matlab` to your Matlab path. 
 1) Click the `Set Path` button on your Matlab toolbar.
 1) Press the `Add Folder` button and select the `src-Matlab` directory.

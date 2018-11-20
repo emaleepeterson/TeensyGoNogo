@@ -90,22 +90,13 @@ void SSO_paramVal(const char* paramName, float val1, float val2) {
 }
 
 
-void SSO_lick_outcome(bool prevLickWasLow){
+void SSO_lick(){
     if (verboseOutput) {
-        if (prevLickWasLow) {
-            Serial.println("Lick On");
-        } else {
-            Serial.println("Lick Off");
-        }
+        Serial.println("Lick");
     } else {
-        if (prevLickWasLow) {
-            Serial.println("LI");
-        } else {
-            Serial.println("LO");
-        }
+        Serial.println("L");
     }
 }
-
 
 void SSO_nose(bool isNoseIn){
     if (verboseOutput) {

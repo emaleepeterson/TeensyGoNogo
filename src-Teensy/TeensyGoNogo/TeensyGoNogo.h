@@ -62,7 +62,6 @@ private:
     unsigned int _maxRunLength;
     uint8_t _numLickBins;
     uint8_t _minLickBins;
-    uint8_t numRewardedOdors;
     unsigned long _stimulusDuration_us;
     unsigned long _binSize_us; // auto-computed from above vars
     unsigned long _rewardDuration_us;
@@ -94,8 +93,6 @@ private:
     unsigned long _lickTime;
 
     // links to hardware
-    
-    uint8_t _optoPin;
     uint8_t _beambreakPin;
     uint8_t _lickPin;
     uint8_t _LEDPin;
@@ -127,7 +124,6 @@ public:
     // set and get user-modifiable parameters
     void set_numRewardedOdors(uint8_t numRewardedOdors);
     void set_rewardedOdorPin(uint8_t rewardedOdorNum, uint8_t pin);
-    void set_optoPin(uint8_t optoPin);
     void set_beambreakPin(uint8_t beambreakPin);
     void set_lickPin(uint8_t lickPin);
     void set_LEDPin(uint8_t LEDPin);
@@ -149,7 +145,6 @@ public:
 
     uint8_t get_numRewardedOdors() {return _numRewardedOdors;};
     int get_rewardedOdorPin(uint8_t rewardedOdorNum); // defined in .cpp
-    uint8_t get_optoPin() {return _optoPin;};
     uint8_t get_beambreakPin() {return _beambreakPin;};
     uint8_t get_lickPin() {return _lickPin;};
     uint8_t get_LEDPin() {return _LEDPin;};

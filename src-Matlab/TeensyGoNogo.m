@@ -17,7 +17,6 @@ classdef TeensyGoNogo < handle
         figure_W
 
         logFile = []
-        logFolder = 'C:\Data\teensy';
         loggingStartTime
         behviorData = []
         trialData = []
@@ -138,12 +137,12 @@ classdef TeensyGoNogo < handle
         end
 
         function setupLogging(self, logName)
-            baseName = [self.logFolder, filesep,logName, '_', char(datetime,'yyyy-MM-dd'), '_'];
+            baseName = [logName, '_', char(datetime,'yyyy-MM-dd'), '_'];
             fileCounter = 1;
-            fName = [baseName, num2str(fileCounter, '%03d'), '.csv'];
+            fName = [baseName, int2str(fileCounter), '.csv'];
             while (exist(fName, 'file'))
                 fileCounter = fileCounter + 1;
-                fName = [baseName, num2str(fileCounter, '%03d'), '.csv'];
+                fName = [baseName, int2str(fileCounter), '.csv'];
             end
             [FileName,PathName] = uiputfile(fName,'Save log file' );
             fName = fullfile(PathName,FileName);
@@ -159,7 +158,7 @@ classdef TeensyGoNogo < handle
                 if isnumeric(value)
                     value = num2str(value);
                 end
-                fprintf(self.logFile, '%.4f,%s,%s\n', secondsElapsed , valName, value);
+                fprintf(self.logFile, '%.3f, %s, %s\n', secondsElapsed , valName, value);
             end
         end
 
@@ -775,10 +774,6 @@ classdef TeensyGoNogo < handle
                         self.logEvent('Reward_End')
                     case 'L'
                         self.logEvent('Lick')
-                    case 'LI'
-                        self.logEvent('Lick_On')
-                    case 'LO'
-                        self.logEvent('Lick_Off')
                     case 'NI'
                         self.logEvent('Nose_In')
                     case 'NO'
